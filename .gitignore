@@ -1,0 +1,9 @@
+# Prevent sensitive seed data from being tracked
+seed/seed.json
+
+# Prevent environment variables from being exposed
+.env
+
+# Ignore build artifacts
+dist/
+node_modules/
