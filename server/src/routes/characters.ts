@@ -1,6 +1,7 @@
-import { Router } from 'express';
 import { supabase } from '../config/supabaseClient'; // Adjust this path if needed
 import { Character } from '../models/characterModel';
+import { Request, Response, Router } from 'express';
+
 
 const router = Router();
 
@@ -21,35 +22,35 @@ router.post('/', async (req, res) => {
 });
 
 // Get all characters
-router.get('/', async (_req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('characters')
-            .select('*');
-
-        if (error) throw error;
-        res.status(200).json(data);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+router.get("/", async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const { data, error } = await supabase.from("characters").select("*");
+    if (error) throw error;
+    res.status(200).json(data);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 // Get a single character by ID
-router.get('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { data, error } = await supabase
-            .from('characters')
-            .select('*')
-            .eq('id', id)
-            .single();
+router.get("/user/:userId", async (req: Request, res: Response) => {
+  const { userId } = req.params;
 
-        if (error) throw error;
-        res.status(200).json(data);
-    } catch (err) {
-        res.status(404).json({ error: 'Character not found' });
-    }
+  try {
+    const { data, error } = await supabase
+      .from("characters")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    res.status(200).json(data);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
 });
+
 
 // Update a character by ID
 router.put('/:id', async (req, res) => {
